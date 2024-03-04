@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/google/go-github/github"
-	"github.com/totmicro/atlantis-yaml-generator/pkg/config"
-	"github.com/totmicro/atlantis-yaml-generator/pkg/helpers"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/config"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/helpers"
 	"golang.org/x/oauth2"
 )
 

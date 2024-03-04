@@ -1,4 +1,4 @@
-module github.com/totmicro/atlantis-yaml-generator
+module github.com/w-edd/atlantis-yaml-generator
 
 go 1.21
 

@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/totmicro/atlantis-yaml-generator/pkg/config"
-	"github.com/totmicro/atlantis-yaml-generator/pkg/github"
-	"github.com/totmicro/atlantis-yaml-generator/pkg/helpers"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/config"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/github"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/helpers"
 
 	"gopkg.in/yaml.v3"
 )

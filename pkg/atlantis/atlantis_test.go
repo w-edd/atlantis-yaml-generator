@@ -3,8 +3,8 @@ package atlantis
 import (
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
-	"github.com/totmicro/atlantis-yaml-generator/pkg/config"
-	"github.com/totmicro/atlantis-yaml-generator/pkg/helpers"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/config"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/helpers"
 	"gopkg.in/yaml.v3"
 	"os"
 	"path/filepath"

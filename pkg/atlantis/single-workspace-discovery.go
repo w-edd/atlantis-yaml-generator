@@ -1,7 +1,7 @@
 package atlantis
 
 import (
-	"github.com/totmicro/atlantis-yaml-generator/pkg/helpers"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/helpers"
 	"os"
 	"strings"
 )

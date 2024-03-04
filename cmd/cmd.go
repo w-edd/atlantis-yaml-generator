@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/totmicro/atlantis-yaml-generator/pkg/atlantis"
-	"github.com/totmicro/atlantis-yaml-generator/pkg/config"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/atlantis"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/config"
 
-	"github.com/totmicro/atlantis-yaml-generator/pkg/version"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/version"
 
 	"github.com/spf13/cobra"
 )

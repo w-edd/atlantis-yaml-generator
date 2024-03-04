@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/totmicro/atlantis-yaml-generator/pkg/helpers"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/helpers"
 )
 
 type Config struct {

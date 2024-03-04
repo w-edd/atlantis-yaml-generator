@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/spf13/cobra"
-	"github.com/totmicro/atlantis-yaml-generator/pkg/config"
+	"github.com/w-edd/atlantis-yaml-generator/pkg/config"
 )
 
 func TestInitFlags(t *testing.T) {

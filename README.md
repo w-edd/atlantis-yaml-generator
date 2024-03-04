@@ -235,7 +235,7 @@ projects:
             - '**/*.xml'
 
 ```
-[PR used in the above example](https://github.com/totmicro/atlantis-yaml-generator/pull/1/files)
+[PR used in the above example](https://github.com/w-edd/atlantis-yaml-generator/pull/1/files)
 
 </details>
 
@@ -350,7 +350,7 @@ Additionally, it's essential to ensure that the atlantis-yaml-generator binary i
 
 *Clone this repository:*
 ```
-# git clone https://github.com/totmicro/atlantis-yaml-generator.git
+# git clone https://github.com/w-edd/atlantis-yaml-generator.git
 # cd atlantis-yaml-generator
 ```
 *Install missing dependencies:*

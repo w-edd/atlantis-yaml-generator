@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/totmicro/atlantis-yaml-generator/cmd"
+	"github.com/w-edd/atlantis-yaml-generator/cmd"
 )
 
 func main() {
