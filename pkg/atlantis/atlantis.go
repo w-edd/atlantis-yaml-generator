@@ -174,6 +174,9 @@ func filterProjectFolder(projectFolder ProjectFolder, filesystem helpers.Walkabl
 		if err != nil || info == nil {
 			return err
 		}
+		if strings.Contains(path, ".terraform") {
+			return nil
+		}
 		files = append(files, info.Name())
 		return nil
 	})

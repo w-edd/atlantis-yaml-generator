@@ -761,6 +761,10 @@ func setupFs(fs afero.Fs) {
 
 	fs.MkdirAll("project_with_hcl", 0755)
 	afero.WriteFile(fs, "project_with_hcl/terragrunt.hcl", []byte("hcl"), 0644)
+
+	fs.MkdirAll("project_with_dot_terraform/.terraform", 0755)
+	afero.WriteFile(fs, "project_with_dot_terraform/main.tf", []byte("terraform"), 0644)
+	afero.WriteFile(fs, "project_with_dot_terraform/.terraform/terraform.lock.hcl", []byte("terraform"), 0644)
 }
 
 func TestFilterProjectFolder(t *testing.T) {
@@ -798,6 +802,12 @@ func TestFilterProjectFolder(t *testing.T) {
 			patternExcludor: "",
 			wantFiltered:    false,
 		},
+		{
+			name:            "folder with only .terraform dir",
+			projectFolder:   ProjectFolder{Path: "project_with_dot_terraform"},
+			patternExcludor: ".*\\.hcl",
+			wantFiltered:    false,
+		},
 	}
 
 	for _, tt := range tests {
@@ -819,6 +829,7 @@ func TestFilterProjectFolders(t *testing.T) {
 		{Path: "project_with_both"},
 		{Path: "project_with_tf"},
 		{Path: "project_with_hcl"},
+		{Path: "project_with_dot_terraform"},
 	}
 
 	tests := []struct {
@@ -829,12 +840,12 @@ func TestFilterProjectFolders(t *testing.T) {
 		{
 			name:            "Exclude .hcl files",
 			patternExcludor: ".*\\.hcl",
-			expectedPaths:   []string{"project_with_tf"},
+			expectedPaths:   []string{"project_with_tf", "project_with_dot_terraform"},
 		},
 		{
 			name:            "Empty pattern does not exclude",
 			patternExcludor: "",
-			expectedPaths:   []string{"project_with_both", "project_with_tf", "project_with_hcl"},
+			expectedPaths:   []string{"project_with_dot_terraform", "project_with_both", "project_with_tf", "project_with_hcl"},
 		},
 	}
 
