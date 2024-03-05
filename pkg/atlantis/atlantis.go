@@ -79,6 +79,16 @@ func GenerateAtlantisYAML() error {
 		return err
 	}
 
+	// Filter projects according to pattern-detector pattern-excludor.
+	projectFoldersList, err = filterProjectFolders(
+		projectFoldersList,
+		OSFileSystem{},
+		config.GlobalConfig.Parameters["pattern-excludor"],
+	)
+	if err != nil {
+		return err
+	}
+
 	// Apply PR filter if enabled
 	if enablePRFilter {
 		projectFoldersList, err = applyPRFilter(projectFoldersList, prChangedFiles)
@@ -150,6 +160,47 @@ func scanProjectFolders(filesystem helpers.Walkable, basePath, discoveryMode, pa
 		projectFolders = append(projectFolders, projectFolder.(ProjectFolder))
 	}
 	return projectFolders, err
+}
+
+// Checks that all files in given project meet both pattern-detector and
+// pattern-excludor.
+func filterProjectFolder(projectFolder ProjectFolder, filesystem helpers.Walkable, patternExcludor string) (included bool, err error) {
+	if patternExcludor == "" {
+		return false, err
+	}
+
+	var files []string
+	err = filesystem.Walk(projectFolder.Path, func(path string, info os.FileInfo, err error) error {
+		if err != nil || info == nil {
+			return err
+		}
+		files = append(files, info.Name())
+		return nil
+	})
+
+	for _, file := range files {
+		if helpers.MatchesPattern(patternExcludor, file) {
+			return true, err
+		}
+	}
+
+	return false, err
+}
+
+// Filters out projects that don't meet both pattern-detector and
+// pattern-excludor.
+func filterProjectFolders(projectFoldersList []ProjectFolder, filesystem helpers.Walkable, patternExcludor string) (projectFolders []ProjectFolder, err error) {
+	var filteredProjectFolders []ProjectFolder
+	var filtered bool
+
+	for _, projectFolder := range projectFoldersList {
+		filtered, err = filterProjectFolder(projectFolder, filesystem, patternExcludor)
+		if !filtered {
+			filteredProjectFolders = append(filteredProjectFolders, projectFolder)
+		}
+	}
+
+	return filteredProjectFolders, err
 }
 
 func applyPRFilter(projectFolders []ProjectFolder, changedFiles []string) (filteredProjectFolders []ProjectFolder, err error) {

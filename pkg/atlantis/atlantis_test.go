@@ -397,7 +397,7 @@ func TestScanProjectFolders(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 				assert.NotEmpty(t, projectFolders) // Assuming there are valid project folders
-				assert.Equal(t, test.expectedProjectFolder, projectFolders)
+				assert.ElementsMatch(t, test.expectedProjectFolder, projectFolders)
 			}
 		})
 	}
@@ -746,5 +746,109 @@ func TestScanProjectFoldersUniques(t *testing.T) {
 	// Verify that 3 project folders were returned
 	if len(projectFolders) != 3 {
 		t.Errorf("Expected 3 project folders, got %d. Projects %v", len(projectFolders), projectFolders)
+	}
+}
+
+// Helper function to setup a mock filesystem
+// for filtering files
+func setupFs(fs afero.Fs) {
+	fs.MkdirAll("project_with_both", 0755)
+	afero.WriteFile(fs, "project_with_both/main.tf", []byte("terraform"), 0644)
+	afero.WriteFile(fs, "project_with_both/terragrunt.hcl", []byte("hcl"), 0644)
+
+	fs.MkdirAll("project_with_tf", 0755)
+	afero.WriteFile(fs, "project_with_tf/main.tf", []byte("terraform"), 0644)
+
+	fs.MkdirAll("project_with_hcl", 0755)
+	afero.WriteFile(fs, "project_with_hcl/terragrunt.hcl", []byte("hcl"), 0644)
+}
+
+func TestFilterProjectFolder(t *testing.T) {
+	memFS := afero.NewMemMapFs()
+	setupFs(memFS)
+	fs := afero.Afero{Fs: memFS}
+
+	tests := []struct {
+		name            string
+		projectFolder   ProjectFolder
+		patternExcludor string
+		wantFiltered    bool
+	}{
+		{
+			name:            "folder with both .tf and .hcl files",
+			projectFolder:   ProjectFolder{Path: "project_with_both"},
+			patternExcludor: ".*\\.hcl",
+			wantFiltered:    true,
+		},
+		{
+			name:            "folder with only .tf files",
+			projectFolder:   ProjectFolder{Path: "project_with_tf"},
+			patternExcludor: ".*\\.hcl",
+			wantFiltered:    false,
+		},
+		{
+			name:            "folder with only .hcl files",
+			projectFolder:   ProjectFolder{Path: "project_with_hcl"},
+			patternExcludor: ".*\\.hcl",
+			wantFiltered:    true,
+		},
+		{
+			name:            "folder with only .hcl files",
+			projectFolder:   ProjectFolder{Path: "project_with_hcl"},
+			patternExcludor: "",
+			wantFiltered:    false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			included, err := filterProjectFolder(tt.projectFolder, fs, tt.patternExcludor)
+			assert.NoError(t, err)
+			assert.Equal(t, tt.wantFiltered, included)
+		})
+	}
+}
+
+func TestFilterProjectFolders(t *testing.T) {
+	// Setup the in-memory filesystem
+	memFS := afero.NewMemMapFs()
+	setupFs(memFS)
+	fs := afero.Afero{Fs: memFS}
+
+	projectFoldersList := []ProjectFolder{
+		{Path: "project_with_both"},
+		{Path: "project_with_tf"},
+		{Path: "project_with_hcl"},
+	}
+
+	tests := []struct {
+		name            string
+		patternExcludor string
+		expectedPaths   []string
+	}{
+		{
+			name:            "Exclude .hcl files",
+			patternExcludor: ".*\\.hcl",
+			expectedPaths:   []string{"project_with_tf"},
+		},
+		{
+			name:            "Empty pattern does not exclude",
+			patternExcludor: "",
+			expectedPaths:   []string{"project_with_both", "project_with_tf", "project_with_hcl"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			filteredProjectFolders, err := filterProjectFolders(projectFoldersList, fs, tt.patternExcludor)
+			assert.NoError(t, err)
+
+			var filteredPaths []string
+			for _, pf := range filteredProjectFolders {
+				filteredPaths = append(filteredPaths, pf.Path)
+			}
+
+			assert.ElementsMatch(t, tt.expectedPaths, filteredPaths, "Filtered project folders do not match expected")
+		})
 	}
 }

@@ -109,6 +109,13 @@ var ParameterList = []Parameter{
 		Shorthand:    "q",
 	},
 	{
+		Name:         "pattern-excludor",
+		Description:  "exclude projects based on files, directories names or regex.",
+		Required:     false,
+		DefaultValue: "",
+		Shorthand:    "",
+	},
+	{
 		Name:         "discovery-mode",
 		Description:  "mode used to discover projects [single-workspace|multi-workspace]",
 		Required:     false,
