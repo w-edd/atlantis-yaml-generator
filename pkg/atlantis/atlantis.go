@@ -348,9 +348,11 @@ func prFilter(relPath string, changedFiles []string) bool {
 func genProjectName(path, workspace string) string {
 	// Generate project name based on the path and workspace
 	if workspace != "default" {
-		return fmt.Sprintf("%s-%s", strings.Replace(path, "/", "-", -1), workspace)
+		// return fmt.Sprintf("%s-%s", strings.Replace(path, "/", "-", -1), workspace)
+		return fmt.Sprintf("%s/%s", path, workspace)
 	}
-	return strings.Replace(path, "/", "-", -1)
+	// return strings.Replace(path, "/", "-", -1)
+	return path
 }
 
 func projectFilter(item, excludes, includes string) (result bool, err error) {

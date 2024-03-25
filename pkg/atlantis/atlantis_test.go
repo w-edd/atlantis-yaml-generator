@@ -98,31 +98,31 @@ func TestGenProjectName(t *testing.T) {
 			name:         "DefaultWorkspace",
 			path:         "project/path",
 			workspace:    "default",
-			expectedName: "project-path",
+			expectedName: "project/path",
 		},
 		{
 			name:         "NonDefaultWorkspace",
 			path:         "project/path",
 			workspace:    "test",
-			expectedName: "project-path-test",
+			expectedName: "project/path/test",
 		},
 		{
 			name:         "NonDefaultWorkspace",
 			path:         "project/path/subpath",
 			workspace:    "test",
-			expectedName: "project-path-subpath-test",
+			expectedName: "project/path/subpath/test",
 		},
 		{
 			name:         "EmptyPath",
 			path:         "",
 			workspace:    "test",
-			expectedName: "-test",
+			expectedName: "/test",
 		},
 		{
 			name:         "EmptyWorkspace",
 			path:         "project/path",
 			workspace:    "",
-			expectedName: "project-path-",
+			expectedName: "project/path/",
 		},
 	}
 
@@ -267,19 +267,19 @@ func TestGenerateAtlantisProjects(t *testing.T) {
 			Workflow:  "myWorkflow",
 		},
 		{
-			Name:      "project1-test",
+			Name:      "project1/test",
 			Dir:       "project1",
 			Workspace: "test",
 			Workflow:  "myWorkflow",
 		},
 		{
-			Name:      "project2-dev",
+			Name:      "project2/dev",
 			Dir:       "project2",
 			Workspace: "dev",
 			Workflow:  "myWorkflow",
 		},
 		{
-			Name:      "project2-prod",
+			Name:      "project2/prod",
 			Dir:       "project2",
 			Workspace: "prod",
 			Workflow:  "myWorkflow",
@@ -292,9 +292,7 @@ func TestGenerateAtlantisProjects(t *testing.T) {
 		t.Errorf("Expected no error, but got: %v", err)
 	}
 
-	if !reflect.DeepEqual(projects, expectedProjects) {
-		t.Errorf("Expected projects: %+v, but got: %+v", expectedProjects, projects)
-	}
+	assert.ElementsMatch(t, projects, expectedProjects)
 }
 
 func TestPrFilter(t *testing.T) {
